@@ -7,574 +7,184 @@
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-
-:root {
-  --bg:       #0d1117;
-  --sidebar:  #111827;
-  --card:     #161d2a;
-  --card2:    #1c2537;
-  --border:   rgba(255,255,255,0.07);
-  --accent:   #4a9eff;
-  --accent2:  #00e5a0;
-  --text:     #e2e8f0;
-  --muted:    #64748b;
-  --green:    #22c55e;
-  --gold:     #f59e0b;
+:root{
+  --bg:#0d1117;--sidebar:#111827;--card:#161d2a;--card2:#1c2537;
+  --border:rgba(255,255,255,0.07);--accent:#4a9eff;--accent2:#00e5a0;
+  --text:#e2e8f0;--muted:#64748b;--green:#22c55e;--gold:#f59e0b;
 }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-  min-height: 100vh;
-  display: flex;
-  overflow: hidden;
-}
-
-/* ── Sidebar ── */
-.sidebar {
-  width: 200px;
-  min-width: 200px;
-  background: var(--sidebar);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  padding: 24px 0;
-  height: 100vh;
-  position: sticky;
-  top: 0;
-}
-
-.profile-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 20px 24px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 16px;
-}
-
-.avatar-wrap {
-  position: relative;
-  margin-bottom: 10px;
-}
-
-.avatar-wrap img, .avatar-placeholder {
-  width: 64px; height: 64px;
-  border-radius: 50%;
-  border: 2px solid var(--accent);
-  object-fit: cover;
-}
-
-.avatar-placeholder {
-  background: var(--card2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px;
-}
-
-.online-dot {
-  position: absolute;
-  bottom: 2px; right: 2px;
-  width: 12px; height: 12px;
-  background: var(--green);
-  border-radius: 50%;
-  border: 2px solid var(--sidebar);
-}
-
-.profile-name {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text);
-  text-align: center;
-}
-
-.profile-id {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 13px;
-  color: var(--muted);
-  transition: all 0.15s;
-  border-left: 3px solid transparent;
-  font-weight: 500;
-}
-
-.nav-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
-.nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(74,158,255,0.06); }
-.nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
-
-.nav-section {
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 16px 20px 6px;
-}
-
-.logout {
-  margin-top: auto;
-  padding: 16px 20px 0;
-  border-top: 1px solid var(--border);
-}
-
-.logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #ef4444;
-  font-size: 13px;
-  cursor: pointer;
-  padding: 8px 0;
-  font-weight: 500;
-  transition: opacity 0.15s;
-}
-.logout-btn:hover { opacity: 0.7; }
-
-/* ── Main ── */
-.main {
-  flex: 1;
-  overflow-y: auto;
-  padding: 28px;
-  height: 100vh;
-}
-
-/* ── Connect panel ── */
-.connect-panel {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px 24px;
-  margin-bottom: 24px;
-}
-
-.connect-panel h2 {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 14px;
-  color: var(--muted);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-
-.connect-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.field { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 150px; }
-.field label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
-
-input[type="text"], input[type="password"] {
-  padding: 9px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  font-size: 13px;
-  font-family: 'Inter', sans-serif;
-  outline: none;
-  transition: border-color 0.2s;
-}
-input:focus { border-color: var(--accent); }
-input::placeholder { color: #334455; }
-
-.btn-sync {
-  padding: 9px 20px;
-  border: none;
-  border-radius: 8px;
-  background: var(--accent);
-  color: white;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
-  align-self: flex-end;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Inter', sans-serif;
-}
-.btn-sync:hover { background: #3a8eef; }
-.btn-sync:disabled { background: #2a4a6a; color: #556677; cursor: not-allowed; }
-
-.status-msg {
-  margin-top: 10px;
-  padding: 9px 14px;
-  border-radius: 8px;
-  font-size: 12px;
-  display: none;
-}
-.status-msg.error   { background: #2a0f0f; color: #f87171; display: block; }
-.status-msg.success { background: #0f2a1a; color: #4ade80; display: block; }
-.status-msg.loading { background: #0f1a2a; color: #7ab4f0; display: block; }
-
-/* ── Section title ── */
-.section-title {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  margin-bottom: 16px;
-  color: var(--text);
-}
-
-/* ── Recently Played hero ── */
-.hero-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 20px;
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 24px;
-}
-
-.hero-img-wrap {
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  aspect-ratio: 16/9;
-  background: var(--card2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48px;
-}
-
-.hero-img-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.hero-label {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  padding: 8px 12px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.8));
-}
-
-.hero-label .game-name { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; }
-.hero-label .last-played { font-size: 11px; color: var(--muted); }
-
-.hero-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.hero-stat {
-  background: var(--card2);
-  border-radius: 10px;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.hero-stat-icon { font-size: 22px; }
-.hero-stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-.hero-stat-value { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; color: var(--text); }
-.hero-stat-value.green { color: var(--green); }
-.hero-stat-value.gold  { color: var(--gold); }
-.hero-stat-value.accent { color: var(--accent); }
-
-/* ── Bottom grid ── */
-.bottom-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-/* ── Leaderboard ── */
-.leaderboard-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px;
-}
-
-.lb-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
-}
-.lb-row:last-child { border-bottom: none; }
-
-.lb-rank {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  width: 24px;
-  text-align: center;
-  color: var(--muted);
-}
-.lb-rank.gold   { color: #f59e0b; }
-.lb-rank.silver { color: #94a3b8; }
-.lb-rank.bronze { color: #b45309; }
-
-.lb-avatar {
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  background: var(--card2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
-  font-weight: 700;
-  border: 1px solid var(--border);
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.lb-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
-.lb-info { flex: 1; min-width: 0; }
-.lb-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lb-sub  { font-size: 11px; color: var(--muted); }
-
-.lb-score {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--accent2);
-}
-
-/* ── Top games ── */
-.top-games-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px;
-}
-
-.top-games-list { display: flex; flex-direction: column; gap: 10px; }
-
-.top-game-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px;
-  background: var(--card2);
-  border-radius: 10px;
-  transition: background 0.15s;
-}
-.top-game-row:hover { background: #212d42; }
-
-.top-game-img {
-  width: 48px; height: 48px;
-  border-radius: 8px;
-  object-fit: cover;
-  background: var(--bg);
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-}
-.top-game-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-
-.top-game-info { flex: 1; min-width: 0; }
-.top-game-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-.top-game-meta { font-size: 11px; color: var(--muted); }
-
-.top-game-pct {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  min-width: 40px;
-  text-align: right;
-}
-
-.mini-bar {
-  width: 60px; height: 4px;
-  background: var(--bg);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-top: 4px;
-}
-.mini-bar-fill { height: 100%; border-radius: 4px; }
-
-/* ── All games table ── */
-.games-section {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.games-toolbar {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.search-wrap { flex: 1; min-width: 180px; position: relative; }
-.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 13px; pointer-events: none; }
-.search-wrap input { padding-left: 34px; width: 100%; }
-
-select {
-  padding: 9px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  font-size: 13px;
-  font-family: 'Inter', sans-serif;
-  outline: none; cursor: pointer;
-}
-
-.game-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px;
-  border-radius: 10px;
-  transition: background 0.15s;
-}
-.game-row:hover { background: var(--card2); }
-
-.game-icon {
-  width: 40px; height: 40px;
-  border-radius: 8px;
-  object-fit: cover;
-  background: var(--card2);
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  overflow: hidden;
-}
-.game-icon img { width: 100%; height: 100%; object-fit: cover; }
-
-.game-name-col { flex: 1; min-width: 0; }
-.game-name-text { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.game-playtime { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-.game-bar-col { width: 120px; }
-.game-bar-bg { height: 5px; background: var(--bg); border-radius: 4px; overflow: hidden; margin-top: 6px; }
-.game-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s; }
-
-.game-count { font-size: 12px; color: var(--muted); width: 70px; text-align: right; white-space: nowrap; }
-.game-pct-badge {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  width: 46px;
-  text-align: right;
-}
-
-.game-actions { display: flex; gap: 6px; }
-.btn-sm {
-  padding: 5px 10px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 11px;
-  cursor: pointer;
-  transition: all 0.15s;
-  font-family: 'Inter', sans-serif;
-}
-.btn-sm:hover { background: var(--card2); color: var(--text); }
-.btn-sm.del:hover { border-color: #ef4444; color: #ef4444; }
-
-/* ── Stats bar ── */
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.stat-box {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  text-align: center;
-}
-
-.stat-box-label { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
-.stat-box-value { font-family: 'Rajdhani', sans-serif; font-size: 26px; font-weight: 700; }
-
-/* ── Add form ── */
-.add-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-  padding: 14px;
-  background: var(--card2);
-  border-radius: 10px;
-}
-.add-row input[type="text"]   { flex: 2; min-width: 140px; }
-.add-row input[type="number"] { flex: 1; min-width: 80px; }
-.btn-add {
-  padding: 9px 16px;
-  border: none;
-  border-radius: 8px;
-  background: var(--accent2);
-  color: #0a1a12;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: opacity 0.15s;
-  font-family: 'Inter', sans-serif;
-  white-space: nowrap;
-}
-.btn-add:hover { opacity: 0.85; }
-
-/* ── Divider ── */
-.divider { height: 1px; background: var(--border); margin: 16px 0; }
-
-/* ── Empty ── */
-.empty { text-align: center; padding: 40px; color: var(--muted); font-size: 14px; }
-
-/* ── Spinner ── */
-@keyframes spin { to { transform: rotate(360deg); } }
-.spinner {
-  display: inline-block; width: 13px; height: 13px;
-  border: 2px solid rgba(255,255,255,0.2);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-/* scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #2a3040; border-radius: 3px; }
-
-input[type="number"] {
-  padding: 9px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  font-size: 13px;
-  font-family: 'Inter', sans-serif;
-  outline: none;
-  transition: border-color 0.2s;
-}
-input[type="number"]:focus { border-color: var(--accent); }
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;overflow:hidden}
+
+/* Sidebar */
+.sidebar{width:200px;min-width:200px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 0;height:100vh;position:sticky;top:0}
+.profile-section{display:flex;flex-direction:column;align-items:center;padding:0 20px 24px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.avatar-wrap{position:relative;margin-bottom:10px}
+.avatar-wrap img,.avatar-placeholder{width:64px;height:64px;border-radius:50%;border:2px solid var(--accent);object-fit:cover}
+.avatar-placeholder{background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:28px}
+.online-dot{position:absolute;bottom:2px;right:2px;width:12px;height:12px;background:var(--green);border-radius:50%;border:2px solid var(--sidebar)}
+.profile-name{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--text);text-align:center}
+.profile-id{font-size:11px;color:var(--muted);margin-top:2px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .15s;border-left:3px solid transparent;font-weight:500}
+.nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(74,158,255,.06)}
+.nav-item .icon{font-size:16px;width:20px;text-align:center}
+.nav-section{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;padding:16px 20px 6px}
+.logout{margin-top:auto;padding:16px 20px 0;border-top:1px solid var(--border)}
+.logout-btn{display:flex;align-items:center;gap:8px;color:#ef4444;font-size:13px;cursor:pointer;padding:8px 0;font-weight:500;transition:opacity .15s}
+.logout-btn:hover{opacity:.7}
+
+/* Lang selector in sidebar */
+.lang-wrap{padding:8px 20px}
+.lang-wrap label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:5px}
+.lang-select{width:100%;padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:12px;font-family:'Inter',sans-serif;outline:none;cursor:pointer}
+
+/* Main */
+.main{flex:1;overflow-y:auto;padding:28px;height:100vh}
+
+/* Connect */
+.connect-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:24px}
+.connect-panel h2{font-family:'Rajdhani',sans-serif;font-size:14px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
+.connect-row{display:flex;gap:10px;flex-wrap:wrap}
+.field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px}
+.field label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+input[type="text"],input[type="password"],input[type="number"]{padding:9px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;width:100%}
+input:focus{border-color:var(--accent)}
+input::placeholder{color:#334455}
+.btn-sync{padding:9px 20px;border:none;border-radius:8px;background:var(--accent);color:white;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;align-self:flex-end;display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif}
+.btn-sync:hover{background:#3a8eef}
+.btn-sync:disabled{background:#2a4a6a;color:#556677;cursor:not-allowed}
+.status-msg{margin-top:10px;padding:9px 14px;border-radius:8px;font-size:12px;display:none}
+.status-msg.error{background:#2a0f0f;color:#f87171;display:block}
+.status-msg.success{background:#0f2a1a;color:#4ade80;display:block}
+.status-msg.loading{background:#0f1a2a;color:#7ab4f0;display:block}
+
+/* Section */
+.section-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:1px;margin-bottom:16px;color:var(--text)}
+
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat-box-label{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.stat-box-value{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700}
+
+/* Hero */
+.hero-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;display:grid;grid-template-columns:260px 1fr;gap:24px}
+.hero-img-wrap{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:16/9;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:48px}
+.hero-img-wrap img{width:100%;height:100%;object-fit:cover}
+.hero-label{position:absolute;bottom:0;left:0;right:0;padding:8px 12px;background:linear-gradient(transparent,rgba(0,0,0,.8))}
+.hero-label .game-name{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700}
+.hero-label .last-played{font-size:11px;color:var(--muted)}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hero-stat{background:var(--card2);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.hero-stat-icon{font-size:22px}
+.hero-stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.hero-stat-value{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--text)}
+.hero-stat-value.green{color:var(--green)}
+.hero-stat-value.gold{color:var(--gold)}
+.hero-stat-value.accent{color:var(--accent)}
+
+/* Bottom grid */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.leaderboard-card,.top-games-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.lb-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.lb-row:last-child{border-bottom:none}
+.lb-rank{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;width:24px;text-align:center;color:var(--muted)}
+.lb-rank.gold{color:#f59e0b}.lb-rank.silver{color:#94a3b8}.lb-rank.bronze{color:#b45309}
+.lb-avatar{width:34px;height:34px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:1px solid var(--border);overflow:hidden;flex-shrink:0}
+.lb-avatar img{width:100%;height:100%;object-fit:cover}
+.lb-info{flex:1;min-width:0}
+.lb-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-sub{font-size:11px;color:var(--muted)}
+.lb-score{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--accent2)}
+.top-games-list{display:flex;flex-direction:column;gap:10px}
+.top-game-row{display:flex;align-items:center;gap:12px;padding:10px;background:var(--card2);border-radius:10px;transition:background .15s;cursor:pointer}
+.top-game-row:hover{background:#212d42}
+.top-game-img{width:48px;height:48px;border-radius:8px;object-fit:cover;background:var(--bg);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden}
+.top-game-img img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+.top-game-info{flex:1;min-width:0}
+.top-game-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+.top-game-meta{font-size:11px;color:var(--muted)}
+.top-game-pct{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;min-width:40px;text-align:right}
+.mini-bar{width:60px;height:4px;background:var(--bg);border-radius:4px;overflow:hidden;margin-top:4px}
+.mini-bar-fill{height:100%;border-radius:4px}
+
+/* Games list */
+.games-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px}
+.games-toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.search-wrap{flex:1;min-width:180px;position:relative}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
+.search-wrap input{padding-left:34px}
+select{padding:9px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none;cursor:pointer}
+.game-row{display:flex;align-items:center;gap:14px;padding:12px;border-radius:10px;transition:background .15s;cursor:pointer}
+.game-row:hover{background:var(--card2)}
+.game-icon{width:40px;height:40px;border-radius:8px;background:var(--card2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden}
+.game-icon img{width:100%;height:100%;object-fit:cover}
+.game-name-col{flex:1;min-width:0}
+.game-name-text{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.game-playtime{font-size:11px;color:var(--muted);margin-top:2px}
+.game-bar-col{width:120px}
+.game-bar-bg{height:5px;background:var(--bg);border-radius:4px;overflow:hidden;margin-top:6px}
+.game-bar-fill{height:100%;border-radius:4px;transition:width .4s}
+.game-pct-badge{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;width:46px;text-align:right}
+.game-actions{display:flex;gap:6px}
+.btn-sm{padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);font-size:11px;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.btn-sm:hover{background:var(--card2);color:var(--text)}
+.btn-sm.del:hover{border-color:#ef4444;color:#ef4444}
+.add-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:14px;background:var(--card2);border-radius:10px}
+.add-row input[type="text"]{flex:2;min-width:140px}
+.add-row input[type="number"]{flex:1;min-width:80px}
+.btn-add{padding:9px 16px;border:none;border-radius:8px;background:var(--accent2);color:#0a1a12;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s;font-family:'Inter',sans-serif;white-space:nowrap}
+.btn-add:hover{opacity:.85}
+.empty{text-align:center;padding:40px;color:var(--muted);font-size:14px}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.hidden{display:none}
+.modal{background:#161d2a;border:1px solid rgba(255,255,255,.1);border-radius:16px;width:100%;max-width:680px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;flex-shrink:0}
+.modal-game-icon{width:48px;height:48px;border-radius:10px;overflow:hidden;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.modal-game-icon img{width:100%;height:100%;object-fit:cover}
+.modal-title{flex:1;min-width:0}
+.modal-title h3{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700}
+.modal-title p{font-size:12px;color:var(--muted);margin-top:2px}
+.modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.modal-close:hover{background:var(--card2);color:var(--text)}
+.modal-search{padding:14px 24px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:10px;align-items:center}
+.modal-search-wrap{flex:1;position:relative}
+.modal-search-wrap input{width:100%;padding:8px 12px 8px 32px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none}
+.modal-search-wrap input:focus{border-color:var(--accent)}
+.modal-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:12px;pointer-events:none}
+.modal-filter{display:flex;gap:6px}
+.filter-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:white}
+.filter-btn:hover:not(.active){background:var(--card2);color:var(--text)}
+.modal-body{overflow-y:auto;padding:12px 24px;flex:1}
+.ach-item{display:flex;align-items:center;gap:14px;padding:12px;border-radius:10px;transition:background .15s;margin-bottom:4px}
+.ach-item:hover{background:var(--card2)}
+.ach-item.locked{opacity:.5}
+.ach-icon{width:48px;height:48px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:20px}
+.ach-icon img{width:100%;height:100%;object-fit:cover}
+.ach-info{flex:1;min-width:0}
+.ach-name{font-size:14px;font-weight:600;margin-bottom:3px}
+.ach-desc{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ach-meta{text-align:right;flex-shrink:0}
+.ach-pct{font-size:11px;color:var(--muted)}
+.ach-date{font-size:11px;color:var(--accent2);margin-top:2px}
+.ach-check{font-size:18px}
+.modal-loading{text-align:center;padding:40px;color:var(--muted)}
+.modal-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;font-size:12px;color:var(--muted)}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.2);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite}
+.spinner-lg{width:28px;height:28px;border-width:3px;border-color:rgba(255,255,255,.1);border-top-color:var(--accent)}
+
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#2a3040;border-radius:3px}
 </style>
 </head>
 <body>
 
-<!-- ── Sidebar ── -->
+<!-- Sidebar -->
 <aside class="sidebar">
   <div class="profile-section">
     <div class="avatar-wrap">
@@ -590,21 +200,36 @@ input[type="number"]:focus { border-color: var(--accent); }
   <div class="nav-item" onclick="showTab('games')"><span class="icon">🎮</span> Игры</div>
   <div class="nav-item" onclick="showTab('achievements')"><span class="icon">🏆</span> Достижения</div>
 
+  <span class="nav-section">Настройки</span>
+  <div class="lang-wrap">
+    <label>Язык ачивок</label>
+    <select class="lang-select" id="langSelect" onchange="onLangChange()">
+      <option value="russian">🇷🇺 Русский</option>
+      <option value="english">🇺🇸 English</option>
+      <option value="ukrainian">🇺🇦 Українська</option>
+      <option value="german">🇩🇪 Deutsch</option>
+      <option value="french">🇫🇷 Français</option>
+      <option value="spanish">🇪🇸 Español</option>
+      <option value="polish">🇵🇱 Polski</option>
+      <option value="koreana">🇰🇷 한국어</option>
+      <option value="schinese">🇨🇳 中文</option>
+    </select>
+  </div>
+
   <div class="logout">
     <div class="logout-btn" onclick="disconnect()">⏻ Выйти</div>
   </div>
 </aside>
 
-<!-- ── Main ── -->
+<!-- Main -->
 <main class="main">
-
   <!-- Connect -->
   <div class="connect-panel" id="connectPanel">
     <h2>Подключение к Steam</h2>
     <div class="connect-row">
       <div class="field">
         <label>API Ключ</label>
-        <input type="password" id="apiKey" placeholder="Вставь ключ из steamcommunity.com/dev/apikey">
+        <input type="password" id="apiKey" placeholder="steamcommunity.com/dev/apikey">
       </div>
       <div class="field">
         <label>SteamID64</label>
@@ -615,40 +240,36 @@ input[type="number"]:focus { border-color: var(--accent); }
     <div class="status-msg" id="statusMsg"></div>
   </div>
 
-  <!-- TAB: Overview -->
+  <!-- Overview -->
   <div id="tabOverview">
     <div class="stats-row" id="statsRow"></div>
-
     <div class="section-title">Недавно сыграно</div>
     <div class="hero-card" id="heroCard">
       <div class="hero-img-wrap" id="heroImg"><span>🎮</span></div>
       <div class="hero-stats" id="heroStats"></div>
     </div>
-
     <div class="bottom-grid">
       <div class="leaderboard-card">
-        <div class="section-title">Твои топ игры</div>
+        <div class="section-title">Топ по времени</div>
         <div id="leaderboardList"></div>
       </div>
       <div class="top-games-card">
-        <div class="section-title">По прогрессу</div>
+        <div class="section-title">Топ по прогрессу</div>
         <div class="top-games-list" id="topGamesList"></div>
       </div>
     </div>
   </div>
 
-  <!-- TAB: Games -->
+  <!-- Games -->
   <div id="tabGames" style="display:none">
     <div class="games-section">
-      <div class="section-title">Все игры</div>
-
+      <div class="section-title">Все игры <span style="font-size:13px;color:var(--muted);font-family:'Inter'">(нажми на игру чтобы увидеть ачивки)</span></div>
       <div class="add-row">
-        <input type="text"   id="addName"     placeholder="Название игры">
+        <input type="text" id="addName" placeholder="Название игры">
         <input type="number" id="addUnlocked" placeholder="Открыто" min="0">
-        <input type="number" id="addTotal"    placeholder="Всего"   min="1">
+        <input type="number" id="addTotal" placeholder="Всего" min="1">
         <button class="btn-add" onclick="addGame()">+ Добавить</button>
       </div>
-
       <div class="games-toolbar">
         <div class="search-wrap">
           <span class="search-icon">🔍</span>
@@ -661,216 +282,212 @@ input[type="number"]:focus { border-color: var(--accent); }
           <option value="time_desc">Время ↓</option>
         </select>
       </div>
-
       <div id="gamesList"></div>
     </div>
   </div>
 
-  <!-- TAB: Achievements -->
+  <!-- Achievements -->
   <div id="tabAchievements" style="display:none">
     <div class="stats-row" id="achStatsRow"></div>
     <div class="games-section">
-      <div class="section-title">Все достижения</div>
+      <div class="section-title">Все игры <span style="font-size:13px;color:var(--muted);font-family:'Inter'">(нажми чтобы открыть ачивки)</span></div>
       <div id="achList"></div>
     </div>
   </div>
-
 </main>
 
+<!-- ── MODAL ── -->
+<div class="modal-overlay hidden" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-game-icon" id="modalIcon">🎮</div>
+      <div class="modal-title">
+        <h3 id="modalGameName">Загрузка...</h3>
+        <p id="modalGameSub"></p>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-search">
+      <div class="modal-search-wrap">
+        <span class="modal-search-icon">🔍</span>
+        <input type="text" id="modalSearch" placeholder="Поиск ачивки..." oninput="renderModalAchs()">
+      </div>
+      <div class="modal-filter">
+        <button class="filter-btn active" id="filterAll"      onclick="setFilter('all')">Все</button>
+        <button class="filter-btn"        id="filterUnlocked" onclick="setFilter('unlocked')">✅ Открыты</button>
+        <button class="filter-btn"        id="filterLocked"   onclick="setFilter('locked')">🔒 Закрыты</button>
+      </div>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <div class="modal-loading"><div class="spinner spinner-lg" style="margin:0 auto 12px;display:block"></div>Загрузка ачивок...</div>
+    </div>
+    <div class="modal-footer">
+      <span id="modalFooterLeft"></span>
+      <span id="modalFooterRight"></span>
+    </div>
+  </div>
+</div>
+
 <script>
-// ── State ─────────────────────────────────────────────────────
-var games  = [
-  { id:1, name:'Portal 2',       unlocked:50, total:50, icon:null, playtime:420 },
-  { id:2, name:'Hollow Knight',  unlocked:45, total:63, icon:null, playtime:380 },
-  { id:3, name:'Cyberpunk 2077', unlocked:20, total:57, icon:null, playtime:210 },
+// ── State ──────────────────────────────────────────────────
+var games     = [
+  {id:1,name:'Portal 2',      unlocked:50,total:50, icon:null,playtime:420,appid:null},
+  {id:2,name:'Hollow Knight', unlocked:45,total:63, icon:null,playtime:380,appid:null},
+  {id:3,name:'Cyberpunk 2077',unlocked:20,total:57, icon:null,playtime:210,appid:null},
 ];
 var nextId    = 4;
-var editingId = null;
 var activeTab = 'overview';
+var currentKey     = '';
+var currentSteamId = '';
+var modalAchs      = [];
+var modalFilter    = 'all';
+var modalGame      = null;
 
-// ── Helpers ───────────────────────────────────────────────────
-function pct(g)  { return g.total > 0 ? Math.round(g.unlocked / g.total * 100) : 0; }
-function mins(m) { return m >= 60 ? Math.round(m/60) + ' ч' : m + ' мин'; }
+// ── Helpers ────────────────────────────────────────────────
+function pct(g){ return g.total>0?Math.round(g.unlocked/g.total*100):0; }
+function mins(m){ return m>=60?Math.round(m/60)+' ч':m+' мин'; }
+function barColor(p){ return p>=80?'#22c55e':p>=50?'#4a9eff':p>=25?'#f59e0b':'#ef4444'; }
+function getLang(){ return document.getElementById('langSelect').value; }
 
-function barColor(p) {
-  if (p >= 80) return '#22c55e';
-  if (p >= 50) return '#4a9eff';
-  if (p >= 25) return '#f59e0b';
-  return '#ef4444';
+function setStatus(msg,type){
+  var el=document.getElementById('statusMsg');
+  el.className='status-msg '+type;
+  el.innerHTML=msg;
 }
 
-function setStatus(msg, type) {
-  var el = document.getElementById('statusMsg');
-  el.className = 'status-msg ' + type;
-  el.innerHTML = msg;
+function onLangChange(){
+  // Если модалка открыта — перезагрузить ачивки на новом языке
+  if(!document.getElementById('modalOverlay').classList.contains('hidden') && modalGame && modalGame.appid){
+    loadAchievements(modalGame);
+  }
 }
 
-// ── Tabs ──────────────────────────────────────────────────────
-function showTab(name) {
-  activeTab = name;
-  document.getElementById('tabOverview').style.display     = name === 'overview'     ? '' : 'none';
-  document.getElementById('tabGames').style.display        = name === 'games'        ? '' : 'none';
-  document.getElementById('tabAchievements').style.display = name === 'achievements' ? '' : 'none';
-
-  document.querySelectorAll('.nav-item').forEach(function(el) { el.classList.remove('active'); });
-  var map = { overview: 0, games: 1, achievements: 2 };
-  document.querySelectorAll('.nav-item')[map[name]].classList.add('active');
+// ── Tabs ───────────────────────────────────────────────────
+function showTab(name){
+  activeTab=name;
+  ['overview','games','achievements'].forEach(function(t){
+    document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).style.display=t===name?'':'none';
+  });
+  document.querySelectorAll('.nav-item').forEach(function(el,i){
+    el.classList.toggle('active',['overview','games','achievements'][i]===name);
+  });
   renderAll();
 }
 
-// ── Render Overview ───────────────────────────────────────────
-function renderOverview() {
-  renderStats();
-  renderHero();
-  renderLeaderboard();
-  renderTopByProgress();
-}
-
-function renderStats() {
-  var totalU  = games.reduce(function(s,g){ return s+g.unlocked; }, 0);
-  var totalA  = games.reduce(function(s,g){ return s+g.total; }, 0);
-  var avgPct  = totalA > 0 ? Math.round(totalU/totalA*100) : 0;
-  var perfect = games.filter(function(g){ return g.unlocked===g.total && g.total>0; }).length;
-  var totalH  = Math.round(games.reduce(function(s,g){ return s+(g.playtime||0); }, 0) / 60);
-
-  var html = [
-    { label:'Игр',       value: games.length,         color: '#4a9eff' },
-    { label:'Ачивок',    value: totalU+'/'+totalA,    color: '#f59e0b' },
-    { label:'Прогресс',  value: avgPct+'%',            color: barColor(avgPct) },
-    { label:'Платина 🏆',value: perfect,               color: '#22c55e' },
-  ].map(function(s) {
+// ── Render Overview ────────────────────────────────────────
+function renderStats(){
+  var totalU=games.reduce(function(s,g){return s+g.unlocked;},0);
+  var totalA=games.reduce(function(s,g){return s+g.total;},0);
+  var avgPct=totalA>0?Math.round(totalU/totalA*100):0;
+  var perfect=games.filter(function(g){return g.unlocked===g.total&&g.total>0;}).length;
+  var html=[
+    {label:'Игр',      value:games.length,       color:'#4a9eff'},
+    {label:'Ачивок',   value:totalU+'/'+totalA,  color:'#f59e0b'},
+    {label:'Прогресс', value:avgPct+'%',          color:barColor(avgPct)},
+    {label:'Платина 🏆',value:perfect,            color:'#22c55e'},
+  ].map(function(s){
     return '<div class="stat-box"><div class="stat-box-label">'+s.label+'</div><div class="stat-box-value" style="color:'+s.color+'">'+s.value+'</div></div>';
   }).join('');
-
-  document.getElementById('statsRow').innerHTML = html;
-
-  // achievements tab stats
-  var achEl = document.getElementById('achStatsRow');
-  if (achEl) achEl.innerHTML = html;
+  document.getElementById('statsRow').innerHTML=html;
+  var achEl=document.getElementById('achStatsRow');
+  if(achEl) achEl.innerHTML=html;
 }
 
-function renderHero() {
-  if (games.length === 0) return;
-  var sorted = games.slice().sort(function(a,b){ return (b.playtime||0)-(a.playtime||0); });
-  var g = sorted[0];
-  var p = pct(g);
-  var c = barColor(p);
-
-  var imgHtml = g.icon
-    ? '<img src="'+g.icon+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">'
-    : '<span style="font-size:48px">🎮</span>';
-
-  document.getElementById('heroImg').innerHTML =
-    imgHtml +
+function renderHero(){
+  if(games.length===0) return;
+  var g=games.slice().sort(function(a,b){return (b.playtime||0)-(a.playtime||0);})[0];
+  var p=pct(g),c=barColor(p);
+  var imgHtml=g.icon
+    ?'<img src="'+g.icon+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">'
+    :'<span style="font-size:48px">🎮</span>';
+  document.getElementById('heroImg').innerHTML=imgHtml+
     '<div class="hero-label"><div class="game-name">'+g.name+'</div><div class="last-played">⏱ '+mins(g.playtime||0)+'</div></div>';
-
-  document.getElementById('heroStats').innerHTML =
-    heroStat('🏆', 'Достижения', g.unlocked+' / '+g.total, '') +
-    heroStat('📊', 'Прогресс',   p+'%', p>=80?'green':p>=50?'accent':'') +
-    heroStat('⏱',  'Время',      mins(g.playtime||0), '') +
-    heroStat('⭐',  'Статус',     p===100?'Платина!':p>50?'Хорошо':'В процессе', p===100?'green':'');
+  document.getElementById('heroStats').innerHTML=
+    heroStat('🏆','Достижения',g.unlocked+' / '+g.total,'')+
+    heroStat('📊','Прогресс',p+'%',p>=80?'green':p>=50?'accent':'')+
+    heroStat('⏱','Время',mins(g.playtime||0),'')+
+    heroStat('⭐','Статус',p===100?'Платина!':p>50?'Хорошо':'В процессе',p===100?'green':'');
 }
-
-function heroStat(icon, label, value, cls) {
+function heroStat(icon,label,value,cls){
   return '<div class="hero-stat"><div class="hero-stat-icon">'+icon+'</div><div><div class="hero-stat-label">'+label+'</div><div class="hero-stat-value '+cls+'">'+value+'</div></div></div>';
 }
 
-function renderLeaderboard() {
-  var sorted = games.slice().sort(function(a,b){ return (b.playtime||0)-(a.playtime||0); }).slice(0,5);
-  var ranks  = ['gold','silver','bronze','',''];
-  var rankLabels = ['1','2','3','4','5'];
-
-  document.getElementById('leaderboardList').innerHTML = sorted.length === 0
-    ? '<div class="empty">Нет игр</div>'
-    : sorted.map(function(g, i) {
-        var initials = g.name.slice(0,2).toUpperCase();
-        var iconHtml = g.icon
-          ? '<img src="'+g.icon+'" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.textContent=\''+initials+'\'">'
-          : initials;
-        return '<div class="lb-row">'+
-          '<div class="lb-rank '+ranks[i]+'">'+rankLabels[i]+'</div>'+
-          '<div class="lb-avatar">'+iconHtml+'</div>'+
-          '<div class="lb-info"><div class="lb-name">'+g.name+'</div><div class="lb-sub">'+mins(g.playtime||0)+'</div></div>'+
-          '<div class="lb-score">'+pct(g)+'%</div>'+
-        '</div>';
-      }).join('');
+function renderLeaderboard(){
+  var sorted=games.slice().sort(function(a,b){return (b.playtime||0)-(a.playtime||0);}).slice(0,5);
+  var ranks=['gold','silver','bronze','',''];
+  document.getElementById('leaderboardList').innerHTML=sorted.length===0
+    ?'<div class="empty">Нет игр</div>'
+    :sorted.map(function(g,i){
+      var init=g.name.slice(0,2).toUpperCase();
+      var iconHtml=g.icon?'<img src="'+g.icon+'" style="width:100%;height:100%;object-fit:cover">':init;
+      return '<div class="lb-row" onclick="openModal('+JSON.stringify(g).replace(/"/g,'&quot;')+')" style="cursor:pointer">'+
+        '<div class="lb-rank '+ranks[i]+'">'+(i+1)+'</div>'+
+        '<div class="lb-avatar">'+iconHtml+'</div>'+
+        '<div class="lb-info"><div class="lb-name">'+g.name+'</div><div class="lb-sub">'+mins(g.playtime||0)+'</div></div>'+
+        '<div class="lb-score">'+pct(g)+'%</div>'+
+      '</div>';
+    }).join('');
 }
 
-function renderTopByProgress() {
-  var sorted = games.slice().sort(function(a,b){ return pct(b)-pct(a); }).slice(0,5);
-
-  document.getElementById('topGamesList').innerHTML = sorted.length === 0
-    ? '<div class="empty">Нет игр</div>'
-    : sorted.map(function(g) {
-        var p = pct(g);
-        var c = barColor(p);
-        var iconHtml = g.icon
-          ? '<img src="'+g.icon+'" style="width:100%;height:100%;object-fit:cover;border-radius:6px">'
-          : '🎮';
-        return '<div class="top-game-row">'+
-          '<div class="top-game-img">'+iconHtml+'</div>'+
-          '<div class="top-game-info">'+
-            '<div class="top-game-name">'+g.name+'</div>'+
-            '<div class="top-game-meta">'+g.unlocked+'/'+g.total+' ачивок</div>'+
-            '<div class="mini-bar"><div class="mini-bar-fill" style="width:'+p+'%;background:'+c+'"></div></div>'+
-          '</div>'+
-          '<div class="top-game-pct" style="color:'+c+'">'+p+'%</div>'+
-        '</div>';
-      }).join('');
+function renderTopByProgress(){
+  var sorted=games.slice().sort(function(a,b){return pct(b)-pct(a);}).slice(0,5);
+  document.getElementById('topGamesList').innerHTML=sorted.length===0
+    ?'<div class="empty">Нет игр</div>'
+    :sorted.map(function(g){
+      var p=pct(g),c=barColor(p);
+      var iconHtml=g.icon?'<img src="'+g.icon+'">':'🎮';
+      return '<div class="top-game-row" onclick="openModal('+JSON.stringify(g).replace(/"/g,'&quot;')+')"">'+
+        '<div class="top-game-img">'+iconHtml+'</div>'+
+        '<div class="top-game-info">'+
+          '<div class="top-game-name">'+g.name+'</div>'+
+          '<div class="top-game-meta">'+g.unlocked+'/'+g.total+' ачивок</div>'+
+          '<div class="mini-bar"><div class="mini-bar-fill" style="width:'+p+'%;background:'+c+'"></div></div>'+
+        '</div>'+
+        '<div class="top-game-pct" style="color:'+c+'">'+p+'%</div>'+
+      '</div>';
+    }).join('');
 }
 
-// ── Render Games list ──────────────────────────────────────────
-function renderGamesList() {
-  var search = document.getElementById('searchInput').value.toLowerCase().trim();
-  var sort   = document.getElementById('sortSelect').value;
-  var list   = games.slice();
-
-  if (search) list = list.filter(function(g){ return g.name.toLowerCase().includes(search); });
-
-  if      (sort==='name')     list.sort(function(a,b){ return a.name.localeCompare(b.name,'ru'); });
-  else if (sort==='pct_desc') list.sort(function(a,b){ return pct(b)-pct(a); });
-  else if (sort==='pct_asc')  list.sort(function(a,b){ return pct(a)-pct(b); });
-  else if (sort==='time_desc')list.sort(function(a,b){ return (b.playtime||0)-(a.playtime||0); });
-
-  var el = document.getElementById('gamesList');
-  if (list.length === 0) { el.innerHTML = '<div class="empty">Ничего не найдено</div>'; return; }
-
-  el.innerHTML = list.map(function(g) {
-    var p = pct(g);
-    var c = barColor(p);
-    var iconHtml = g.icon
-      ? '<img src="'+g.icon+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">'
-      : '🎮';
-    return '<div class="game-row">'+
+function renderGamesList(){
+  var search=document.getElementById('searchInput').value.toLowerCase().trim();
+  var sort=document.getElementById('sortSelect').value;
+  var list=games.slice();
+  if(search) list=list.filter(function(g){return g.name.toLowerCase().includes(search);});
+  if(sort==='name')     list.sort(function(a,b){return a.name.localeCompare(b.name,'ru');});
+  else if(sort==='pct_desc') list.sort(function(a,b){return pct(b)-pct(a);});
+  else if(sort==='pct_asc')  list.sort(function(a,b){return pct(a)-pct(b);});
+  else if(sort==='time_desc')list.sort(function(a,b){return (b.playtime||0)-(a.playtime||0);});
+  var el=document.getElementById('gamesList');
+  if(list.length===0){el.innerHTML='<div class="empty">Ничего не найдено</div>';return;}
+  el.innerHTML=list.map(function(g){
+    var p=pct(g),c=barColor(p);
+    var iconHtml=g.icon?'<img src="'+g.icon+'" style="width:100%;height:100%;object-fit:cover">':'🎮';
+    return '<div class="game-row" onclick="openModal('+JSON.stringify(g).replace(/"/g,'&quot;')+')"">'+
       '<div class="game-icon">'+iconHtml+'</div>'+
       '<div class="game-name-col">'+
         '<div class="game-name-text">'+g.name+'</div>'+
-        (g.playtime ? '<div class="game-playtime">⏱ '+mins(g.playtime)+'</div>' : '')+
+        (g.playtime?'<div class="game-playtime">⏱ '+mins(g.playtime)+'</div>':'')+
       '</div>'+
       '<div class="game-bar-col">'+
         '<div style="font-size:10px;color:var(--muted);margin-bottom:2px">'+g.unlocked+'/'+g.total+'</div>'+
         '<div class="game-bar-bg"><div class="game-bar-fill" style="width:'+p+'%;background:'+c+'"></div></div>'+
       '</div>'+
       '<div class="game-pct-badge" style="color:'+c+'">'+p+'%</div>'+
-      '<div class="game-actions">'+
+      '<div class="game-actions" onclick="event.stopPropagation()">'+
         '<button class="btn-sm del" onclick="deleteGame('+g.id+')">🗑</button>'+
       '</div>'+
     '</div>';
   }).join('');
 }
 
-// ── Render Achievements ────────────────────────────────────────
-function renderAchievements() {
-  var list = games.slice().sort(function(a,b){ return pct(b)-pct(a); });
-  var el   = document.getElementById('achList');
-  if (list.length === 0) { el.innerHTML = '<div class="empty">Нет игр</div>'; return; }
-  el.innerHTML = list.map(function(g) {
-    var p = pct(g);
-    var c = barColor(p);
-    var iconHtml = g.icon
-      ? '<img src="'+g.icon+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">'
-      : '🎮';
-    return '<div class="game-row">'+
+function renderAchievements(){
+  var list=games.slice().sort(function(a,b){return pct(b)-pct(a);});
+  var el=document.getElementById('achList');
+  if(list.length===0){el.innerHTML='<div class="empty">Нет игр</div>';return;}
+  el.innerHTML=list.map(function(g){
+    var p=pct(g),c=barColor(p);
+    var iconHtml=g.icon?'<img src="'+g.icon+'" style="width:100%;height:100%;object-fit:cover">':'🎮';
+    return '<div class="game-row" onclick="openModal('+JSON.stringify(g).replace(/"/g,'&quot;')+')"">'+
       '<div class="game-icon">'+iconHtml+'</div>'+
       '<div class="game-name-col"><div class="game-name-text">'+g.name+'</div></div>'+
       '<div class="game-bar-col">'+
@@ -882,98 +499,247 @@ function renderAchievements() {
   }).join('');
 }
 
-// ── Render All ─────────────────────────────────────────────────
-function renderAll() {
-  renderOverview();
-  if (activeTab === 'games')        renderGamesList();
-  if (activeTab === 'achievements') renderAchievements();
+function renderAll(){
+  renderStats();
+  renderHero();
+  renderLeaderboard();
+  renderTopByProgress();
+  if(activeTab==='games')        renderGamesList();
+  if(activeTab==='achievements') renderAchievements();
 }
 
-// ── Add / Delete ───────────────────────────────────────────────
-function addGame() {
-  var name     = document.getElementById('addName').value.trim();
-  var unlocked = parseInt(document.getElementById('addUnlocked').value);
-  var total    = parseInt(document.getElementById('addTotal').value);
-  if (!name)                      return alert('Введи название');
-  if (isNaN(unlocked)||isNaN(total)) return alert('Введи числа');
-  if (unlocked > total)           return alert('Открытых не может быть больше чем всего');
-  games.push({ id: nextId++, name: name, unlocked: unlocked, total: total, icon: null, playtime: 0 });
-  document.getElementById('addName').value = '';
-  document.getElementById('addUnlocked').value = '';
-  document.getElementById('addTotal').value = '';
+// ── Add / Delete ───────────────────────────────────────────
+function addGame(){
+  var name=document.getElementById('addName').value.trim();
+  var unlocked=parseInt(document.getElementById('addUnlocked').value);
+  var total=parseInt(document.getElementById('addTotal').value);
+  if(!name) return alert('Введи название');
+  if(isNaN(unlocked)||isNaN(total)) return alert('Введи числа');
+  if(unlocked>total) return alert('Открытых не может быть больше чем всего');
+  games.push({id:nextId++,name:name,unlocked:unlocked,total:total,icon:null,playtime:0,appid:null});
+  document.getElementById('addName').value='';
+  document.getElementById('addUnlocked').value='';
+  document.getElementById('addTotal').value='';
   renderAll();
 }
-
-function deleteGame(id) {
-  var g = games.filter(function(g){ return g.id===id; })[0];
-  if (!g || !confirm('Удалить "'+g.name+'"?')) return;
-  games = games.filter(function(g){ return g.id!==id; });
+function deleteGame(id){
+  var g=games.filter(function(g){return g.id===id;})[0];
+  if(!g||!confirm('Удалить "'+g.name+'"?')) return;
+  games=games.filter(function(g){return g.id!==id;});
   renderAll();
 }
-
-function disconnect() {
-  document.getElementById('sidebarName').textContent = 'Игрок';
-  document.getElementById('sidebarId').textContent   = 'Не подключено';
-  document.getElementById('sidebarAvatar').innerHTML = '🎮';
+function disconnect(){
+  document.getElementById('sidebarName').textContent='Игрок';
+  document.getElementById('sidebarId').textContent='Не подключено';
+  document.getElementById('sidebarAvatar').innerHTML='🎮';
+  currentKey=''; currentSteamId='';
 }
 
-// ── Steam Sync ─────────────────────────────────────────────────
-async function syncSteam() {
-  var key     = document.getElementById('apiKey').value.trim();
-  var steamid = document.getElementById('steamId').value.trim();
-  var btn     = document.getElementById('syncBtn');
+// ── MODAL ──────────────────────────────────────────────────
+function openModal(game){
+  modalGame=game;
+  modalAchs=[];
+  modalFilter='all';
+  document.getElementById('modalSearch').value='';
+  document.getElementById('modalGameName').textContent=game.name;
+  document.getElementById('modalGameSub').textContent='';
+  document.getElementById('modalFooterLeft').textContent='';
+  document.getElementById('modalFooterRight').textContent='';
 
-  if (!key)     return setStatus('❌ Введи API ключ', 'error');
-  if (!steamid) return setStatus('❌ Введи SteamID64', 'error');
+  var iconEl=document.getElementById('modalIcon');
+  iconEl.innerHTML=game.icon?'<img src="'+game.icon+'" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.textContent=\'🎮\'">':'🎮';
 
-  btn.disabled  = true;
-  btn.innerHTML = '<span class="spinner"></span> Загрузка...';
-  setStatus('⏳ Подключаемся к Steam...', 'loading');
+  setFilterBtn('all');
+  document.getElementById('modalOverlay').classList.remove('hidden');
+  document.body.style.overflow='hidden';
 
-  try {
-    var profRes  = await fetch('/api/profile?key='+encodeURIComponent(key)+'&steamid='+encodeURIComponent(steamid));
-    var profData = await profRes.json();
-    if (!profRes.ok) throw new Error(profData.error || 'Ошибка профиля');
-
-    document.getElementById('sidebarName').textContent = profData.name;
-    document.getElementById('sidebarId').textContent   = steamid.slice(0,8)+'...';
-
-    if (profData.avatar) {
-      document.getElementById('sidebarAvatar').innerHTML =
-        '<img src="'+profData.avatar+'" style="width:64px;height:64px;border-radius:50%;border:2px solid var(--accent);object-fit:cover">';
-    }
-
-    setStatus('⏳ Загружаем игры... (10–20 сек)', 'loading');
-
-    var gamesRes  = await fetch('/api/games?key='+encodeURIComponent(key)+'&steamid='+encodeURIComponent(steamid));
-    var gamesData = await gamesRes.json();
-    if (!gamesRes.ok) throw new Error(gamesData.error || 'Ошибка загрузки игр');
-
-    if (!gamesData.games || gamesData.games.length === 0) {
-      setStatus('⚠️ Игры не найдены. Проверь приватность профиля в Steam.', 'error');
-    } else {
-      var manual = games.filter(function(g){ return !g.appid; });
-      var sg = gamesData.games.map(function(g, i) {
-        return { id: nextId+i, appid: g.appid, name: g.name, icon: g.icon, playtime: g.playtime, unlocked: g.unlocked, total: g.total };
-      });
-      nextId += sg.length;
-      games = sg.concat(manual);
-      setStatus('✅ Загружено '+sg.length+' игр!', 'success');
-      renderAll();
-    }
-  } catch(err) {
-    var msg = err.message.includes('fetch') || err.message.includes('Failed')
-      ? '❌ Сервер не отвечает. Убедись что запущен node server.js'
-      : '❌ ' + err.message;
-    setStatus(msg, 'error');
-  } finally {
-    btn.disabled  = false;
-    btn.innerHTML = '🔄 Синхронизировать';
+  if(game.appid && currentKey && currentSteamId){
+    loadAchievements(game);
+  } else {
+    document.getElementById('modalBody').innerHTML=
+      '<div class="modal-loading" style="color:var(--muted)">'+
+      '⚠️ Ачивки доступны только для игр синхронизированных со Steam.<br><br>'+
+      '<span style="font-size:12px">Подключи Steam и синхронизируй библиотеку.</span></div>';
   }
 }
 
-// ── Init ───────────────────────────────────────────────────────
+function closeModal(){
+  document.getElementById('modalOverlay').classList.add('hidden');
+  document.body.style.overflow='';
+  modalAchs=[];
+  modalGame=null;
+}
+
+function closeModalOutside(e){
+  if(e.target===document.getElementById('modalOverlay')) closeModal();
+}
+
+function setFilter(f){
+  modalFilter=f;
+  setFilterBtn(f);
+  renderModalAchs();
+}
+
+function setFilterBtn(f){
+  ['all','unlocked','locked'].forEach(function(name){
+    document.getElementById('filter'+name.charAt(0).toUpperCase()+name.slice(1)).classList.toggle('active',name===f);
+  });
+}
+
+async function loadAchievements(game){
+  document.getElementById('modalBody').innerHTML=
+    '<div class="modal-loading"><div class="spinner spinner-lg" style="margin:0 auto 12px;display:block"></div>Загрузка ачивок...</div>';
+  document.getElementById('modalGameSub').textContent='Загрузка...';
+
+  try {
+    var url='/api/achievements?key='+encodeURIComponent(currentKey)+
+            '&steamid='+encodeURIComponent(currentSteamId)+
+            '&appid='+encodeURIComponent(game.appid)+
+            '&lang='+getLang();
+    var res=await fetch(url);
+    var data=await res.json();
+    if(!res.ok) throw new Error(data.error||'Ошибка');
+
+    modalAchs=data.achievements||[];
+    var unlocked=modalAchs.filter(function(a){return a.achieved;}).length;
+    document.getElementById('modalGameSub').textContent=unlocked+' / '+modalAchs.length+' открыто';
+    document.getElementById('modalFooterLeft').textContent='Язык: '+getLang();
+    renderModalAchs();
+  } catch(err){
+    document.getElementById('modalBody').innerHTML=
+      '<div class="modal-loading" style="color:#f87171">❌ '+err.message+'</div>';
+  }
+}
+
+function renderModalAchs(){
+  var search=document.getElementById('modalSearch').value.toLowerCase().trim();
+  var list=modalAchs.slice();
+
+  if(modalFilter==='unlocked') list=list.filter(function(a){return a.achieved;});
+  if(modalFilter==='locked')   list=list.filter(function(a){return !a.achieved;});
+  if(search) list=list.filter(function(a){
+    return a.name.toLowerCase().includes(search)||(a.description||'').toLowerCase().includes(search);
+  });
+
+  var unlocked=list.filter(function(a){return a.achieved;}).length;
+  document.getElementById('modalFooterRight').textContent=
+    'Показано: '+list.length+' ('+unlocked+' открыто)';
+
+  if(list.length===0){
+    document.getElementById('modalBody').innerHTML='<div class="empty">Ничего не найдено</div>';
+    return;
+  }
+
+  document.getElementById('modalBody').innerHTML=list.map(function(a){
+    var dateStr='';
+    if(a.achieved && a.unlocktime){
+      var d=new Date(a.unlocktime*1000);
+      dateStr=d.toLocaleDateString('ru-RU');
+    }
+    var iconHtml=a.icon
+      ?'<img src="'+a.icon+'" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.textContent=\''+(a.achieved?'🏆':'🔒')+'\'">'
+      :(a.achieved?'🏆':'🔒');
+    var globalStr=a.globalPct!==null?'<div class="ach-pct">'+a.globalPct+'% игроков</div>':'';
+    return '<div class="ach-item'+(a.achieved?'':' locked')+'">'+
+      '<div class="ach-icon">'+iconHtml+'</div>'+
+      '<div class="ach-info">'+
+        '<div class="ach-name">'+a.name+'</div>'+
+        '<div class="ach-desc">'+(a.description||'Скрытое достижение')+'</div>'+
+      '</div>'+
+      '<div class="ach-meta">'+
+        '<div class="ach-check">'+(a.achieved?'✅':'🔒')+'</div>'+
+        globalStr+
+        (dateStr?'<div class="ach-date">'+dateStr+'</div>':'')+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+// ── Steam Sync ─────────────────────────────────────────────
+async function syncSteam(){
+  var key=document.getElementById('apiKey').value.trim();
+  var steamid=document.getElementById('steamId').value.trim();
+  var btn=document.getElementById('syncBtn');
+  if(!key)     return setStatus('❌ Введи API ключ','error');
+  if(!steamid) return setStatus('❌ Введи SteamID64','error');
+
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span> Загрузка...';
+  setStatus('⏳ Подключаемся к Steam...','loading');
+
+  try{
+    var profRes=await fetch('/api/profile?key='+encodeURIComponent(key)+'&steamid='+encodeURIComponent(steamid));
+    var profData=await profRes.json();
+    if(!profRes.ok) throw new Error(profData.error||'Ошибка профиля');
+
+    currentKey=key; currentSteamId=steamid;
+    saveCredentials(key, steamid);
+    document.getElementById('sidebarName').textContent=profData.name;
+    document.getElementById('sidebarId').textContent=steamid.slice(0,8)+'...';
+    if(profData.avatar){
+      document.getElementById('sidebarAvatar').innerHTML=
+        '<img src="'+profData.avatar+'" style="width:64px;height:64px;border-radius:50%;border:2px solid var(--accent);object-fit:cover">';
+    }
+
+    setStatus('⏳ Загружаем игры... (10–20 сек)','loading');
+
+    var gamesRes=await fetch('/api/games?key='+encodeURIComponent(key)+'&steamid='+encodeURIComponent(steamid));
+    var gamesData=await gamesRes.json();
+    if(!gamesRes.ok) throw new Error(gamesData.error||'Ошибка загрузки игр');
+
+    if(!gamesData.games||gamesData.games.length===0){
+      setStatus('⚠️ Игры не найдены. Проверь приватность профиля в Steam.','error');
+    } else {
+      var manual=games.filter(function(g){return !g.appid;});
+      var sg=gamesData.games.map(function(g,i){
+        return {id:nextId+i,appid:g.appid,name:g.name,icon:g.icon,playtime:g.playtime,unlocked:g.unlocked,total:g.total};
+      });
+      nextId+=sg.length;
+      games=sg.concat(manual);
+      setStatus('✅ Загружено '+sg.length+' игр! Нажми на любую игру чтобы увидеть ачивки.','success');
+      renderAll();
+    }
+  } catch(err){
+    setStatus((err.message.includes('fetch')||err.message.includes('Failed'))
+      ?'❌ Сервер не отвечает. Убедись что запущен node server.js'
+      :'❌ '+err.message,'error');
+  } finally{
+    btn.disabled=false;
+    btn.innerHTML='🔄 Синхронизировать';
+  }
+}
+
+// Закрыть модалку по Escape
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
+
+// ── localStorage: сохранение ключа и SteamID ──────────────
+function saveCredentials(key, steamid) {
+  try { localStorage.setItem('steam_key', key); localStorage.setItem('steam_sid', steamid); } catch(e) {}
+}
+function loadCredentials() {
+  try {
+    var key     = localStorage.getItem('steam_key');
+    var steamid = localStorage.getItem('steam_sid');
+    if (key)     document.getElementById('apiKey').value  = key;
+    if (steamid) document.getElementById('steamId').value = steamid;
+    if (key && steamid) syncSteam();
+  } catch(e) {}
+}
+
+// Перезаписываем disconnect чтобы чистил localStorage
+function disconnect() {
+  try { localStorage.removeItem('steam_key'); localStorage.removeItem('steam_sid'); } catch(e) {}
+  document.getElementById('apiKey').value  = '';
+  document.getElementById('steamId').value = '';
+  document.getElementById('sidebarName').textContent = 'Игрок';
+  document.getElementById('sidebarId').textContent   = 'Не подключено';
+  document.getElementById('sidebarAvatar').innerHTML = '🎮';
+  currentKey = ''; currentSteamId = '';
+  games = []; renderAll();
+}
+
 renderAll();
+loadCredentials();
 </script>
 </body>
 </html>
