@@ -180,9 +180,79 @@ select{padding:9px 14px;border-radius:8px;border:1px solid var(--border);backgro
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#2a3040;border-radius:3px}
+
+/* ── Login Screen ─────────────────────────────────────────── */
+.login-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .5s ease, transform .5s ease;
+}
+.login-screen.hidden{
+  opacity:0;pointer-events:none;transform:scale(1.03);
+}
+.login-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:40px 44px;
+  width:100%;max-width:440px;
+  box-shadow:0 24px 80px rgba(0,0,0,.6);
+  animation:loginIn .4s ease;
+}
+@keyframes loginIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.login-logo{text-align:center;margin-bottom:28px}
+.login-logo-icon{font-size:48px;margin-bottom:10px}
+.login-logo h1{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;letter-spacing:3px;color:var(--text)}
+.login-logo p{font-size:12px;color:var(--muted);letter-spacing:1.5px;margin-top:4px}
+.login-divider{height:1px;background:var(--border);margin:24px 0}
+.login-field{margin-bottom:16px}
+.login-field label{display:block;font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.login-field input{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.login-field input:focus{border-color:var(--accent)}
+.login-field input::placeholder{color:#334455}
+.login-btn{width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:white;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px}
+.login-btn:hover{background:#3a8eef}
+.login-btn:disabled{background:#2a4a6a;color:#556677;cursor:not-allowed}
+.login-links{display:flex;justify-content:center;gap:20px;margin-top:16px}
+.login-links a{font-size:11px;color:var(--muted);text-decoration:none;transition:color .15s}
+.login-links a:hover{color:var(--accent)}
+.login-status{margin-top:12px;padding:9px 14px;border-radius:8px;font-size:12px;display:none;text-align:center}
+.login-status.error{background:#2a0f0f;color:#f87171;display:block}
+.login-status.loading{background:#0f1a2a;color:#7ab4f0;display:block}
+
 </style>
 </head>
 <body>
+
+<!-- ── Login Screen ── -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-icon">🎮</div>
+      <h1>STEAM TRACKER</h1>
+      <p>Achievement Progress</p>
+    </div>
+    <div class="login-divider"></div>
+    <div class="login-field">
+      <label>Steam API Key</label>
+      <input type="password" id="loginKey" placeholder="Вставь ключ из steamcommunity.com/dev/apikey" autocomplete="off">
+    </div>
+    <div class="login-field">
+      <label>SteamID64</label>
+      <input type="text" id="loginSteamId" placeholder="76561198XXXXXXXXX">
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">
+      🔄 Войти через Steam
+    </button>
+    <div class="login-status" id="loginStatus"></div>
+    <div class="login-links">
+      <a href="https://steamcommunity.com/dev/apikey" target="_blank">Получить API ключ</a>
+      <a href="https://www.steamidfinder.com" target="_blank">Найти SteamID</a>
+    </div>
+  </div>
+</div>
+
 
 <!-- Sidebar -->
 <aside class="sidebar">
@@ -223,8 +293,8 @@ select{padding:9px 14px;border-radius:8px;border:1px solid var(--border);backgro
 
 <!-- Main -->
 <main class="main">
-  <!-- Connect -->
-  <div class="connect-panel" id="connectPanel">
+  <!-- Connect (hidden, kept for status) -->
+  <div class="connect-panel" id="connectPanel" style="display:none">
     <h2>Подключение к Steam</h2>
     <div class="connect-row">
       <div class="field">
@@ -697,6 +767,7 @@ async function syncSteam(){
       nextId+=sg.length;
       games=sg.concat(manual);
       setStatus('✅ Загружено '+sg.length+' игр! Нажми на любую игру чтобы увидеть ачивки.','success');
+      hideLoginScreen();
       renderAll();
     }
   } catch(err){
@@ -712,30 +783,85 @@ async function syncSteam(){
 // Закрыть модалку по Escape
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
 
-// ── localStorage: сохранение ключа и SteamID ──────────────
+// ── localStorage ──────────────────────────────────────────
 function saveCredentials(key, steamid) {
   try { localStorage.setItem('steam_key', key); localStorage.setItem('steam_sid', steamid); } catch(e) {}
 }
-function loadCredentials() {
-  try {
-    var key     = localStorage.getItem('steam_key');
-    var steamid = localStorage.getItem('steam_sid');
-    if (key)     document.getElementById('apiKey').value  = key;
-    if (steamid) document.getElementById('steamId').value = steamid;
-    if (key && steamid) syncSteam();
-  } catch(e) {}
+
+// ── Login screen ───────────────────────────────────────────
+function setLoginStatus(msg, type) {
+  var el = document.getElementById('loginStatus');
+  el.className = 'login-status ' + type;
+  el.textContent = msg;
 }
 
-// Перезаписываем disconnect чтобы чистил localStorage
+async function doLogin() {
+  var key     = document.getElementById('loginKey').value.trim();
+  var steamid = document.getElementById('loginSteamId').value.trim();
+  var btn     = document.getElementById('loginBtn');
+
+  if (!key)     return setLoginStatus('❌ Введи API ключ', 'error');
+  if (!steamid) return setLoginStatus('❌ Введи SteamID64', 'error');
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Подключаемся...';
+  setLoginStatus('⏳ Проверяем данные...', 'loading');
+
+  // Копируем в основные поля и запускаем syncSteam
+  document.getElementById('apiKey').value  = key;
+  document.getElementById('steamId').value = steamid;
+
+  try {
+    await syncSteam();
+    // Если syncSteam прошёл без ошибки — скрываем экран входа
+    hideLoginScreen();
+  } catch(e) {
+    setLoginStatus('❌ ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '🔄 Войти через Steam';
+  }
+}
+
+function hideLoginScreen() {
+  var el = document.getElementById('loginScreen');
+  el.classList.add('hidden');
+  setTimeout(function(){ el.style.display = 'none'; }, 500);
+}
+
+function showLoginScreen() {
+  var el = document.getElementById('loginScreen');
+  el.style.display = 'flex';
+  setTimeout(function(){ el.classList.remove('hidden'); }, 10);
+}
+
 function disconnect() {
   try { localStorage.removeItem('steam_key'); localStorage.removeItem('steam_sid'); } catch(e) {}
   document.getElementById('apiKey').value  = '';
   document.getElementById('steamId').value = '';
+  document.getElementById('loginKey').value    = '';
+  document.getElementById('loginSteamId').value = '';
   document.getElementById('sidebarName').textContent = 'Игрок';
   document.getElementById('sidebarId').textContent   = 'Не подключено';
   document.getElementById('sidebarAvatar').innerHTML = '🎮';
   currentKey = ''; currentSteamId = '';
   games = []; renderAll();
+  showLoginScreen();
+}
+
+function loadCredentials() {
+  try {
+    var key     = localStorage.getItem('steam_key');
+    var steamid = localStorage.getItem('steam_sid');
+    if (key && steamid) {
+      document.getElementById('apiKey').value      = key;
+      document.getElementById('steamId').value     = steamid;
+      document.getElementById('loginKey').value    = key;
+      document.getElementById('loginSteamId').value = steamid;
+      // Автовход
+      syncSteam().then(function(){ hideLoginScreen(); }).catch(function(){ });
+    }
+  } catch(e) {}
 }
 
 renderAll();
