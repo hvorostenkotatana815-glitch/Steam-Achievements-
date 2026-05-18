@@ -270,9 +270,17 @@ select{padding:9px 14px;border-radius:8px;border:1px solid var(--border);backgro
   <div class="nav-item" onclick="showTab('games')"><span class="icon">🎮</span> Игры</div>
   <div class="nav-item" onclick="showTab('achievements')"><span class="icon">🏆</span> Достижения</div>
 
-  <span class="nav-section">Настройки</span>
+  <span class="nav-section" data-i18n="settings">Настройки</span>
   <div class="lang-wrap">
-    <label>Язык ачивок</label>
+    <label data-i18n="ui_lang">Язык интерфейса</label>
+    <select class="lang-select" id="uiLangSelect" onchange="applyLang(this.value)">
+      <option value="ru">🇷🇺 Русский</option>
+      <option value="en">🇺🇸 English</option>
+      <option value="uk">🇺🇦 Українська</option>
+    </select>
+  </div>
+  <div class="lang-wrap" style="margin-top:4px">
+    <label data-i18n="ach_lang">Язык ачивок</label>
     <select class="lang-select" id="langSelect" onchange="onLangChange()">
       <option value="russian">🇷🇺 Русский</option>
       <option value="english">🇺🇸 English</option>
@@ -313,18 +321,18 @@ select{padding:9px 14px;border-radius:8px;border:1px solid var(--border);backgro
   <!-- Overview -->
   <div id="tabOverview">
     <div class="stats-row" id="statsRow"></div>
-    <div class="section-title">Недавно сыграно</div>
+    <div class="section-title" id="titleRecentlyPlayed">Недавно сыграно</div>
     <div class="hero-card" id="heroCard">
       <div class="hero-img-wrap" id="heroImg"><span>🎮</span></div>
       <div class="hero-stats" id="heroStats"></div>
     </div>
     <div class="bottom-grid">
       <div class="leaderboard-card">
-        <div class="section-title">Топ по времени</div>
+        <div class="section-title" id="titleTopTime">Топ по времени</div>
         <div id="leaderboardList"></div>
       </div>
       <div class="top-games-card">
-        <div class="section-title">Топ по прогрессу</div>
+        <div class="section-title" id="titleTopProgress">Топ по прогрессу</div>
         <div class="top-games-list" id="topGamesList"></div>
       </div>
     </div>
@@ -415,7 +423,7 @@ var modalGame      = null;
 
 // ── Helpers ────────────────────────────────────────────────
 function pct(g){ return g.total>0?Math.round(g.unlocked/g.total*100):0; }
-function mins(m){ return m>=60?Math.round(m/60)+' ч':m+' мин'; }
+function mins(m){ return m>=60?Math.round(m/60)+' '+t('hours'):m+' '+t('mins'); }
 function barColor(p){ return p>=80?'#22c55e':p>=50?'#4a9eff':p>=25?'#f59e0b':'#ef4444'; }
 function getLang(){ return document.getElementById('langSelect').value; }
 
@@ -451,10 +459,10 @@ function renderStats(){
   var avgPct=totalA>0?Math.round(totalU/totalA*100):0;
   var perfect=games.filter(function(g){return g.unlocked===g.total&&g.total>0;}).length;
   var html=[
-    {label:'Игр',      value:games.length,       color:'#4a9eff'},
-    {label:'Ачивок',   value:totalU+'/'+totalA,  color:'#f59e0b'},
-    {label:'Прогресс', value:avgPct+'%',          color:barColor(avgPct)},
-    {label:'Платина 🏆',value:perfect,            color:'#22c55e'},
+    {label:t('stat_games'),    value:games.length,      color:'#4a9eff'},
+    {label:t('stat_achs'),     value:totalU+'/'+totalA, color:'#f59e0b'},
+    {label:t('stat_progress'), value:avgPct+'%',         color:barColor(avgPct)},
+    {label:t('stat_platinum')+' 🏆', value:perfect,     color:'#22c55e'},
   ].map(function(s){
     return '<div class="stat-box"><div class="stat-box-label">'+s.label+'</div><div class="stat-box-value" style="color:'+s.color+'">'+s.value+'</div></div>';
   }).join('');
@@ -486,7 +494,7 @@ function renderLeaderboard(){
   var sorted=games.slice().sort(function(a,b){return (b.playtime||0)-(a.playtime||0);}).slice(0,5);
   var ranks=['gold','silver','bronze','',''];
   document.getElementById('leaderboardList').innerHTML=sorted.length===0
-    ?'<div class="empty">Нет игр</div>'
+    ?('<div class="empty">'+t('no_games')+'</div>')
     :sorted.map(function(g,i){
       var init=g.name.slice(0,2).toUpperCase();
       var iconHtml=g.icon?'<img src="'+g.icon+'" style="width:100%;height:100%;object-fit:cover">':init;
@@ -502,7 +510,7 @@ function renderLeaderboard(){
 function renderTopByProgress(){
   var sorted=games.slice().sort(function(a,b){return pct(b)-pct(a);}).slice(0,5);
   document.getElementById('topGamesList').innerHTML=sorted.length===0
-    ?'<div class="empty">Нет игр</div>'
+    ?('<div class="empty">'+t('no_games')+'</div>')
     :sorted.map(function(g){
       var p=pct(g),c=barColor(p);
       var iconHtml=g.icon?'<img src="'+g.icon+'">':'🎮';
@@ -528,7 +536,7 @@ function renderGamesList(){
   else if(sort==='pct_asc')  list.sort(function(a,b){return pct(a)-pct(b);});
   else if(sort==='time_desc')list.sort(function(a,b){return (b.playtime||0)-(a.playtime||0);});
   var el=document.getElementById('gamesList');
-  if(list.length===0){el.innerHTML='<div class="empty">Ничего не найдено</div>';return;}
+  if(list.length===0){el.innerHTML=('<div class="empty">'+t('no_results')+'</div>');return;}
   el.innerHTML=list.map(function(g){
     var p=pct(g),c=barColor(p);
     var iconHtml=g.icon?'<img src="'+g.icon+'" style="width:100%;height:100%;object-fit:cover">':'🎮';
@@ -553,7 +561,7 @@ function renderGamesList(){
 function renderAchievements(){
   var list=games.slice().sort(function(a,b){return pct(b)-pct(a);});
   var el=document.getElementById('achList');
-  if(list.length===0){el.innerHTML='<div class="empty">Нет игр</div>';return;}
+  if(list.length===0){el.innerHTML=('<div class="empty">'+t('no_games')+'</div>');return;}
   el.innerHTML=list.map(function(g){
     var p=pct(g),c=barColor(p);
     var iconHtml=g.icon?'<img src="'+g.icon+'" style="width:100%;height:100%;object-fit:cover">':'🎮';
@@ -576,6 +584,11 @@ function renderAll(){
   renderTopByProgress();
   if(activeTab==='games')        renderGamesList();
   if(activeTab==='achievements') renderAchievements();
+  // Update section titles
+  var el;
+  el=document.getElementById('titleRecentlyPlayed'); if(el) el.textContent=t('recently_played');
+  el=document.getElementById('titleTopTime');        if(el) el.textContent=t('top_by_time');
+  el=document.getElementById('titleTopProgress');    if(el) el.textContent=t('top_by_progress');
 }
 
 // ── Add / Delete ───────────────────────────────────────────
@@ -658,7 +671,7 @@ function setFilterBtn(f){
 
 async function loadAchievements(game){
   document.getElementById('modalBody').innerHTML=
-    '<div class="modal-loading"><div class="spinner spinner-lg" style="margin:0 auto 12px;display:block"></div>Загрузка ачивок...</div>';
+    ('<div class="modal-loading"><div class="spinner spinner-lg" style="margin:0 auto 12px;display:block"></div>'+t('loading_achs')+'</div>');
   document.getElementById('modalGameSub').textContent='Загрузка...';
 
   try {
@@ -693,10 +706,10 @@ function renderModalAchs(){
 
   var unlocked=list.filter(function(a){return a.achieved;}).length;
   document.getElementById('modalFooterRight').textContent=
-    'Показано: '+list.length+' ('+unlocked+' открыто)';
+    t('shown')+' '+list.length+' ('+unlocked+' '+t('opened')+')';
 
   if(list.length===0){
-    document.getElementById('modalBody').innerHTML='<div class="empty">Ничего не найдено</div>';
+    document.getElementById('modalBody').innerHTML=('<div class="empty">'+t('no_results')+'</div>');
     return;
   }
 
@@ -709,12 +722,12 @@ function renderModalAchs(){
     var iconHtml=a.icon
       ?'<img src="'+a.icon+'" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.textContent=\''+(a.achieved?'🏆':'🔒')+'\'">'
       :(a.achieved?'🏆':'🔒');
-    var globalStr=a.globalPct!==null?'<div class="ach-pct">'+a.globalPct+'% игроков</div>':'';
+    var globalStr=a.globalPct!==null?'<div class="ach-pct">'+a.globalPct+t('players_pct')+'</div>':'';
     return '<div class="ach-item'+(a.achieved?'':' locked')+'">'+
       '<div class="ach-icon">'+iconHtml+'</div>'+
       '<div class="ach-info">'+
         '<div class="ach-name">'+a.name+'</div>'+
-        '<div class="ach-desc">'+(a.description||'Скрытое достижение')+'</div>'+
+        '<div class="ach-desc">'+(a.description||t('hidden_ach'))+'</div>'+
       '</div>'+
       '<div class="ach-meta">'+
         '<div class="ach-check">'+(a.achieved?'✅':'🔒')+'</div>'+
@@ -782,6 +795,247 @@ async function syncSteam(){
 
 // Закрыть модалку по Escape
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
+
+
+// ── Translations ──────────────────────────────────────────
+var T = {
+  ru: {
+    settings:'НАСТРОЙКИ', ui_lang:'Язык интерфейса', ach_lang:'Язык ачивок',
+    menu:'МЕНЮ', overview:'Обзор', games:'Игры', achievements:'Достижения',
+    logout:'Выйти',
+    not_connected:'Не подключено',
+    connect_title:'Подключение к Steam',
+    api_key_label:'API Ключ', steamid_label:'SteamID64',
+    api_key_ph:'steamcommunity.com/dev/apikey', steamid_ph:'76561198XXXXXXXXX',
+    sync_btn:'🔄 Синхронизировать',
+    recently_played:'Недавно сыграно',
+    top_by_time:'Топ по времени', top_by_progress:'Топ по прогрессу',
+    all_games:'Все игры', click_hint:'(нажми на игру чтобы увидеть ачивки)',
+    add_manually:'Добавить вручную',
+    game_name_ph:'Название игры', unlocked_ph:'Открыто', total_ph:'Всего',
+    add_btn:'+ Добавить',
+    search_ph:'Поиск...',
+    sort_name:'По названию', sort_pct_desc:'Прогресс ↓', sort_pct_asc:'Прогресс ↑', sort_time:'Время ↓',
+    stat_games:'Игр', stat_achs:'Ачивок', stat_progress:'Прогресс', stat_platinum:'Платина',
+    status_good:'Хорошо', status_platinum:'Платина!', status_progress:'В процессе',
+    achievements_label:'Достижения', time_label:'Время', status_label:'Статус',
+    filter_all:'Все', filter_unlocked:'✅ Открыты', filter_locked:'🔒 Закрыты',
+    modal_search_ph:'Поиск ачивки...',
+    hidden_ach:'Скрытое достижение',
+    players_pct:'% игроков',
+    no_results:'Ничего не найдено',
+    no_games:'Нет игр',
+    loading_achs:'Загрузка ачивок...',
+    steam_only:'Ачивки доступны только для игр синхронизированных со Steam.',
+    connect_steam:'Подключи Steam и синхронизируй библиотеку.',
+    shown:'Показано:', opened:'открыто',
+    delete_confirm:'Удалить',
+    login_title:'Войти через Steam',
+    login_key_label:'Steam API Key', login_id_label:'SteamID64',
+    login_key_ph:'Вставь ключ из steamcommunity.com/dev/apikey',
+    login_id_ph:'76561198XXXXXXXXX',
+    login_btn:'🔄 Войти через Steam',
+    get_key:'Получить API ключ', find_id:'Найти SteamID',
+    connecting:'Подключаемся...', checking:'Проверяем данные...',
+    syncing:'Синхронизируемся...',
+    hours:'ч', mins:'мин',
+    lang_label:'Язык интерфейса',
+  },
+  en: {
+    settings:'SETTINGS', ui_lang:'Interface language', ach_lang:'Achievements language',
+    menu:'MENU', overview:'Overview', games:'Games', achievements:'Achievements',
+    logout:'Log out',
+    not_connected:'Not connected',
+    connect_title:'Connect to Steam',
+    api_key_label:'API Key', steamid_label:'SteamID64',
+    api_key_ph:'steamcommunity.com/dev/apikey', steamid_ph:'76561198XXXXXXXXX',
+    sync_btn:'🔄 Sync',
+    recently_played:'Recently Played',
+    top_by_time:'Top by time', top_by_progress:'Top by progress',
+    all_games:'All games', click_hint:'(click a game to see achievements)',
+    add_manually:'Add manually',
+    game_name_ph:'Game name', unlocked_ph:'Unlocked', total_ph:'Total',
+    add_btn:'+ Add',
+    search_ph:'Search...',
+    sort_name:'By name', sort_pct_desc:'Progress ↓', sort_pct_asc:'Progress ↑', sort_time:'Time ↓',
+    stat_games:'Games', stat_achs:'Achievements', stat_progress:'Progress', stat_platinum:'Platinum',
+    status_good:'Good', status_platinum:'Platinum!', status_progress:'In progress',
+    achievements_label:'Achievements', time_label:'Time', status_label:'Status',
+    filter_all:'All', filter_unlocked:'✅ Unlocked', filter_locked:'🔒 Locked',
+    modal_search_ph:'Search achievement...',
+    hidden_ach:'Hidden achievement',
+    players_pct:'% of players',
+    no_results:'Nothing found',
+    no_games:'No games',
+    loading_achs:'Loading achievements...',
+    steam_only:'Achievements are only available for Steam synced games.',
+    connect_steam:'Connect Steam and sync your library.',
+    shown:'Shown:', opened:'unlocked',
+    delete_confirm:'Delete',
+    login_title:'Sign in via Steam',
+    login_key_label:'Steam API Key', login_id_label:'SteamID64',
+    login_key_ph:'Paste key from steamcommunity.com/dev/apikey',
+    login_id_ph:'76561198XXXXXXXXX',
+    login_btn:'🔄 Sign in via Steam',
+    get_key:'Get API key', find_id:'Find SteamID',
+    connecting:'Connecting...', checking:'Checking data...',
+    syncing:'Syncing...',
+    hours:'h', mins:'min',
+    lang_label:'Interface language',
+  },
+  uk: {
+    settings:'НАЛАШТУВАННЯ', ui_lang:'Мова інтерфейсу', ach_lang:'Мова досягнень',
+    menu:'МЕНЮ', overview:'Огляд', games:'Ігри', achievements:'Досягнення',
+    logout:'Вийти',
+    not_connected:'Не підключено',
+    connect_title:'Підключення до Steam',
+    api_key_label:'API Ключ', steamid_label:'SteamID64',
+    api_key_ph:'steamcommunity.com/dev/apikey', steamid_ph:'76561198XXXXXXXXX',
+    sync_btn:'🔄 Синхронізувати',
+    recently_played:'Нещодавно зіграно',
+    top_by_time:'Топ за часом', top_by_progress:'Топ за прогресом',
+    all_games:'Всі ігри', click_hint:'(натисни на гру щоб побачити досягнення)',
+    add_manually:'Додати вручну',
+    game_name_ph:'Назва гри', unlocked_ph:'Відкрито', total_ph:'Всього',
+    add_btn:'+ Додати',
+    search_ph:'Пошук...',
+    sort_name:'За назвою', sort_pct_desc:'Прогрес ↓', sort_pct_asc:'Прогрес ↑', sort_time:'Час ↓',
+    stat_games:'Ігор', stat_achs:'Досягнень', stat_progress:'Прогрес', stat_platinum:'Платина',
+    status_good:'Добре', status_platinum:'Платина!', status_progress:'В процесі',
+    achievements_label:'Досягнення', time_label:'Час', status_label:'Статус',
+    filter_all:'Всі', filter_unlocked:'✅ Відкриті', filter_locked:'🔒 Закриті',
+    modal_search_ph:'Пошук досягнення...',
+    hidden_ach:'Приховане досягнення',
+    players_pct:'% гравців',
+    no_results:'Нічого не знайдено',
+    no_games:'Немає ігор',
+    loading_achs:'Завантаження досягнень...',
+    steam_only:'Досягнення доступні лише для ігор синхронізованих зі Steam.',
+    connect_steam:'Підключи Steam та синхронізуй бібліотеку.',
+    shown:'Показано:', opened:'відкрито',
+    delete_confirm:'Видалити',
+    login_title:'Увійти через Steam',
+    login_key_label:'Steam API Key', login_id_label:'SteamID64',
+    login_key_ph:'Вставте ключ з steamcommunity.com/dev/apikey',
+    login_id_ph:'76561198XXXXXXXXX',
+    login_btn:'🔄 Увійти через Steam',
+    get_key:'Отримати API ключ', find_id:'Знайти SteamID',
+    connecting:'Підключаємось...', checking:'Перевіряємо дані...',
+    syncing:'Синхронізуємось...',
+    hours:'г', mins:'хв',
+    lang_label:'Мова інтерфейсу',
+  },
+};
+
+var currentLang = 'ru';
+
+function t(key) {
+  return (T[currentLang] && T[currentLang][key]) || T['ru'][key] || key;
+}
+
+function applyLang(lang) {
+  currentLang = lang;
+  try { localStorage.setItem('ui_lang', lang); } catch(e) {}
+
+  // Nav items
+  document.querySelectorAll('.nav-item')[0].innerHTML = '<span class="icon">⊞</span> ' + t('overview');
+  document.querySelectorAll('.nav-item')[1].innerHTML = '<span class="icon">🎮</span> ' + t('games');
+  document.querySelectorAll('.nav-item')[2].innerHTML = '<span class="icon">🏆</span> ' + t('achievements');
+
+  // Nav sections
+  var navSections = document.querySelectorAll('.nav-section');
+  if(navSections[0]) navSections[0].textContent = t('menu');
+  if(navSections[1]) navSections[1].textContent = t('settings');
+
+  // Lang labels
+  var langLabels = document.querySelectorAll('.lang-wrap label');
+  if(langLabels[0]) langLabels[0].textContent = t('ui_lang');
+  if(langLabels[1]) langLabels[1].textContent = t('ach_lang');
+
+  // Logout
+  var logoutBtn = document.querySelector('.logout-btn');
+  if(logoutBtn) logoutBtn.innerHTML = '⏻ ' + t('logout');
+
+  // Sidebar not connected
+  var sid = document.getElementById('sidebarId');
+  if(sid && sid.textContent === 'Не подключено' || sid.textContent === 'Not connected' || sid.textContent === 'Не підключено') {
+    sid.textContent = t('not_connected');
+  }
+
+  // Connect panel
+  var connectTitle = document.querySelector('.connect-panel h2');
+  if(connectTitle) connectTitle.textContent = t('connect_title');
+
+  // Section titles - re-render will handle these
+  // Inputs placeholders
+  var apiKeyInput = document.getElementById('apiKey');
+  if(apiKeyInput) apiKeyInput.placeholder = t('api_key_ph');
+  var steamIdInput = document.getElementById('steamId');
+  if(steamIdInput) steamIdInput.placeholder = t('steamid_ph');
+  var syncBtn = document.getElementById('syncBtn');
+  if(syncBtn && !syncBtn.disabled) syncBtn.innerHTML = t('sync_btn');
+
+  // Login screen
+  var loginKeyInput = document.getElementById('loginKey');
+  if(loginKeyInput) loginKeyInput.placeholder = t('login_key_ph');
+  var loginSteamId = document.getElementById('loginSteamId');
+  if(loginSteamId) loginSteamId.placeholder = t('login_id_ph');
+  var loginBtn = document.getElementById('loginBtn');
+  if(loginBtn && !loginBtn.disabled) loginBtn.innerHTML = t('login_btn');
+  var loginTitle = document.querySelector('.login-logo p');
+  if(loginTitle) loginTitle.textContent = 'Achievement Progress';
+
+  // Field labels
+  var fieldLabels = document.querySelectorAll('.field label');
+  if(fieldLabels[0]) fieldLabels[0].textContent = t('api_key_label');
+  if(fieldLabels[1]) fieldLabels[1].textContent = t('steamid_label');
+
+  // Add row placeholders
+  var addName = document.getElementById('addName');
+  if(addName) addName.placeholder = t('game_name_ph');
+  var addUnlocked = document.getElementById('addUnlocked');
+  if(addUnlocked) addUnlocked.placeholder = t('unlocked_ph');
+  var addTotal = document.getElementById('addTotal');
+  if(addTotal) addTotal.placeholder = t('total_ph');
+  var addBtn = document.querySelector('.btn-add');
+  if(addBtn) addBtn.textContent = t('add_btn');
+
+  // Search placeholders
+  var searchInput = document.getElementById('searchInput');
+  if(searchInput) searchInput.placeholder = t('search_ph');
+  var modalSearch = document.getElementById('modalSearch');
+  if(modalSearch) modalSearch.placeholder = t('modal_search_ph');
+
+  // Sort options
+  var sortSelect = document.getElementById('sortSelect');
+  if(sortSelect) {
+    sortSelect.options[0].text = t('sort_name');
+    sortSelect.options[1].text = t('sort_pct_desc');
+    sortSelect.options[2].text = t('sort_pct_asc');
+    sortSelect.options[3].text = t('sort_time');
+  }
+
+  // Modal filter buttons
+  var filterAll = document.getElementById('filterAll');
+  if(filterAll) filterAll.textContent = t('filter_all');
+  var filterUnlocked = document.getElementById('filterUnlocked');
+  if(filterUnlocked) filterUnlocked.textContent = t('filter_unlocked');
+  var filterLocked = document.getElementById('filterLocked');
+  if(filterLocked) filterLocked.textContent = t('filter_locked');
+
+  // Login screen links
+  var loginLinks = document.querySelectorAll('.login-links a');
+  if(loginLinks[0]) loginLinks[0].textContent = t('get_key');
+  if(loginLinks[1]) loginLinks[1].textContent = t('find_id');
+
+  // Login field labels
+  var loginLabels = document.querySelectorAll('.login-field label');
+  if(loginLabels[0]) loginLabels[0].textContent = t('login_key_label');
+  if(loginLabels[1]) loginLabels[1].textContent = t('login_id_label');
+
+  // Re-render to update dynamic text
+  renderAll();
+}
 
 // ── localStorage ──────────────────────────────────────────
 function saveCredentials(key, steamid) {
@@ -851,15 +1105,19 @@ function disconnect() {
 
 function loadCredentials() {
   try {
+    var savedLang = localStorage.getItem('ui_lang');
+    if (savedLang && T[savedLang]) {
+      document.getElementById('uiLangSelect').value = savedLang;
+      applyLang(savedLang);
+    }
     var key     = localStorage.getItem('steam_key');
     var steamid = localStorage.getItem('steam_sid');
     if (key && steamid) {
-      document.getElementById('apiKey').value      = key;
-      document.getElementById('steamId').value     = steamid;
-      document.getElementById('loginKey').value    = key;
+      document.getElementById('apiKey').value       = key;
+      document.getElementById('steamId').value      = steamid;
+      document.getElementById('loginKey').value     = key;
       document.getElementById('loginSteamId').value = steamid;
-      // Автовход
-      syncSteam().then(function(){ hideLoginScreen(); }).catch(function(){ });
+      syncSteam().then(function(){ hideLoginScreen(); }).catch(function(){});
     }
   } catch(e) {}
 }
